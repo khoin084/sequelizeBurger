@@ -1,57 +1,89 @@
-/* global moment */
-
-// When user clicks add-btn
-$("#chirp-submit").on("click", function(event) {
-  event.preventDefault();
-
-  // Make a newChirp object
-  var newChirp = {
-    author: $("#author").val().trim(),
-    body: $("#chirp-box").val().trim(),
-    created_at: moment().format("YYYY-MM-DD HH:mm:ss")
-  };
-
-  console.log(newChirp);
-
-  // Send an AJAX POST-request with jQuery
-  $.post("/api/new", newChirp)
-    // On success, run the following code
-    .done(function() {
-
-      var row = $("<div>");
-      row.addClass("chirp");
-
-      row.append("<p>" + newChirp.author + " chirped: </p>");
-      row.append("<p>" + newChirp.body + "</p>");
-      row.append("<p>At " + moment(newChirp.created_at).format("h:mma on dddd") + "</p>");
-
-      $("#chirp-area").prepend(row);
-
-    });
-
-  // Empty each input box by replacing the value with an empty string
-  $("#author").val("");
-  $("#chirp-box").val("");
-});
-
-// When the page loads, grab all of our chirps
-$.get("/api/all", function(data) {
-
-  if (data.length !== 0) {
-
-    for (var i = 0; i < data.length; i++) {
-
-      var row = $("<div>");
-      row.addClass("chirp");
-
-      row.append("<p>" + data[i].author + " chirped.. </p>");
-      row.append("<p>" + data[i].body + "</p>");
-      row.append("<p>At " + moment(data[i].created_at).format("h:mma on dddd") + "</p>");
-
-      $("#chirp-area").prepend(row);
+/*=========================================================================
+*Developer:Khoi Nguyen
+*Date: 5/3/2017
+*UCSD Code Bootcamp: Homework #15
+FE js for burger
+==========================================================================*/
+var url = window.location.search;
+var counter = 0;
+// Constructing a newPost object to hand to the database
+var newBurger = {
+    burger_name: null,
+    devour: false,
+    created_at: null
+};
+//single object to control the DOM
+var burger = {
+    
+    init: function() {  
+        this.cacheDom();
+        this.renderHide();
+        this.bindEvents();
+    },
+    cacheDom: function () {
+        this.$displayArea = $("#displayArea");
+        this.$textArea = $("#textArea");
+        this.$submitBtn = $("#submitBtn");
+        this.$burgers = $("#burgers");
+        this.$btns = $("#btns");
+        this.$eaten = $("#eaten");
+    },
+    bindEvents: function () {
+        this.$submitBtn.on("click", this.postData.bind(this));
+        //need to have a selector argument for dynamically create buttons.
+        $(document).on("click", ".devBtn", this.eatThatBurger);
+    }, 
+    renderHide: function () {
+        this.$displayArea.hide();
+    },
+    renderShow: function () {
+        this.$displayArea.show();
+    },
+    //submits a new post to the db
+    postData: function() {
+        console.log("submit button works");
+        console.log(this.$textArea.val().trim());
+        newBurger.burger_name = this.$textArea.val().trim();
+        //ajax post call with path url and newBurger data entered by user.
+        $.post("api/postedBurger", newBurger).done(function() {
+            counter++;
+            //dynamically appending newly added burger.
+            var newBtn = $("<button>");
+            newBtn.addClass("btn btn-md btn-warning");
+            newBtn.append("<p>" + newBurger.burger_name + " </p>");
+            newBtn.attr("id", counter);
+            burger.$burgers.append(newBtn);
+            //dynamically appending devour buttons.
+            var devourBtn = $("<button>Devour</button>");
+            devourBtn.addClass("btn btn-md btn-danger devBtn");
+            devourBtn.attr("value", counter);
+            burger.$btns.append(devourBtn);
+        });
+        this.$textArea.val("");
+        this.renderShow();
+    }, 
+    // getData: function (id) {
+    //     console.log("devour button: " + id);
+    //     $.get("api/burgers", function (burgers) {
+    //         console.log(burgers[0].id);
+    //     });
+    // },
+    eatThatBurger: function() {
+        //storing identifier into variable
+        var toDelete = "#" + $(this).val();
+        //adding to eaten area
+        var newBtn = $("<button>");
+        newBtn.addClass("btn btn-md btn-warning");
+        newBtn.append("<p>" + $(toDelete).text() + " </p>");
+        burger.$eaten.append(newBtn);
+        //removing added burger
+        $(toDelete).remove();
+        //deleting the devour button.
+        $(this).remove();     
 
     }
+};
 
-  }
-
+$( document ).ready(function() {
+    burger.init();
 });

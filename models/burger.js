@@ -1,3 +1,8 @@
+// reference standard lib sequelize
+var Sequelize = require("sequelize");
+// references our connection to the DB.
+// var connection = require("../config/connection.js");
+
 module.exports = function(sequelize, DataTypes) {
   var Burger = sequelize.define("Burger", {
     burger_name: {
@@ -7,15 +12,14 @@ module.exports = function(sequelize, DataTypes) {
         len: [1]
       }
     },
-    devour: {
+    devoured: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: false,
       len: [1]
-    },
-    time_stamp: {
-      type: DataTypes.TIME,
-      defaultValue: "Personal"
     }
+    }, {timestamps:  true
+    
   });
   return Burger;
 };
