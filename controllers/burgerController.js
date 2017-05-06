@@ -12,6 +12,13 @@ module.exports = function(app) {
     });
   });
 
+  app.get("/api/burgers", function(req, res) {
+    // GET arbitrarily any buger by id
+    db.Burger.findAll({}).then(function(foundAllBurgers) {
+      res.json(foundAllBurgers);
+    });
+  });
+
   app.get("/api/burgers/:id", function(req, res) {
     // GET arbitrarily any buger by id
     db.Burger.findOne({
@@ -34,18 +41,18 @@ module.exports = function(app) {
     });
   });
 
-  app.put("/api/updatedBurger", function(req, res) {
-    console.log("the id is: "+req.body.id);
+  app.post("/api/updatedBurger", function(req, res) {
+    console.log("the id is: "+ req.body.burger_id[0]);
     db.Burger.update({
       devoured: true
       },
       {
         where: {
-          id: req.body.id
+          id: req.body.burger_id
         }
       }).then(function(updatedResult) {
         //console.log("in the put");
-        res.json(updatedResult);
+        res.redirect("/");
       });
   });
 };

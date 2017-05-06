@@ -1,34 +1,29 @@
-<h1>Eat Dat Burger!</h1>
-
+<h1 class="text-center">Eat Dat Burger!</h1>
 
 <div class="container">
   <div class="row">
-    <div class="col-xs-4">
+    {{#each burgers}}
+      {{#unless this.devoured}}
+    <div class="col-md-6 well">
+      <button class="btn btn-warning btn-md">{{this.id}}. {{this.burger_name}}</button>
+    </div>
+     <div class="col-md-6 well">
+      <form action="/api/updatedBurger" method="POST">
+            <input type="hidden" name="burger_id" type="text" value={{this.id}}>
+            <button type="submit" name="burger_id" class="btn btn-danger btn-md">Devour It!!!</button>
+      </form>
+    </div>
+     {{/unless}}
+    {{/each}}
+    <div class="col-md-12 well">
       {{#each burgers}}
         {{#if this.devoured}}
-          <!--do nothing here because handlebars cannot do 'not'-->
-        {{else}}
-          <button class="btn btn-warning btn-md">{{this.id}}. {{this.burger_name}}</button>
+            <button class="btn btn-success btn-md">{{this.id}}. {{this.burger_name}}</button>
         {{/if}}
       {{/each}}
     </div>
-    <div class="col-xs-4">
-      <form action="/api/updatedBurger" method="POST">
-        {{#each burgers}}
-          {{#if this.devoured}}
-            <!--do nothing here because handlebars cannot do 'not'-->
-          {{else}}
-            <button type="submit" class="btn btn-danger btn-md" value={{this.id}}>Devour It!!!</button>
-          {{/if}}
-        {{/each}}
-      </form>
-    </div>
-    <div class="col-xs-4">
-      
-    </div>
   </div>
 </div>
-
 
 <div class="container">
   <div class="row">
