@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "bchw15",
-    "password": "bchw15",
-    "database": "burgers_development",
-    "host": "127.0.0.1",
+    "username": "b41132beb9a46f",
+    "password": "bdfbbf0f",
+    "database": "heroku_cfc5d9eed86ed58",
+    "host": "us-cdbr-iron-east-03.cleardb.net",
     "dialect": "mysql"
   },
   "test": {
